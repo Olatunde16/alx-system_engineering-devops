@@ -1,2 +1,2 @@
 #!/bin/bash
-chmod (change mode)
+chmod u+x g+x o+r hello
