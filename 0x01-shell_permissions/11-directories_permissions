@@ -1,3 +1,2 @@
 #!/bin/bash
-chmod -R 755
-chmod 001 alx-system_engineering-devops
+chmod -r ugo+x /alx-system_engineering-devops
