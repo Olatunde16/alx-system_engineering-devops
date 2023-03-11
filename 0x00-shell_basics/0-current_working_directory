@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "Shell basics"
+pwd 0-current_working_directory
