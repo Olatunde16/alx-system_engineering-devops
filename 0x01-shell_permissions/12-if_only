@@ -1,0 +1,2 @@
+#!/bin/bash
+if chown guillaume:hello then chown betty:hello
