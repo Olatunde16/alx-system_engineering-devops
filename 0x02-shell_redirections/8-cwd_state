@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "It lists all files including hidden files"
