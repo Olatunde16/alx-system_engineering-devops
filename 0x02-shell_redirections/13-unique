@@ -1,0 +1,2 @@
+#!/bin/bash
+sort -uk iacta | uniq -u
