@@ -1,0 +1,1 @@
+echo tr $WATER 01234 | tr $STIR 01234 | echo $(($WATER+$STIR)) | printf “%o” 44834284 | echo 253016754 | tr 01234567 bestchol

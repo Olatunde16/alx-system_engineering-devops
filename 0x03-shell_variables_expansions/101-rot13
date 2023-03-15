@@ -1,0 +1,2 @@
+#!/bin/bash
+cat 101-rot13 | tr a-zA-Z n-za-mN-ZA-M
