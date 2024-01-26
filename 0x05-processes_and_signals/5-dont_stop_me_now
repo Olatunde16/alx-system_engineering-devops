@@ -2,6 +2,4 @@
 # Kills the 4-to_infinity_and_beyond process
 
 # Use kill and pgrep to find and terminate the process
-kill $(pgrep -f "4-to_infinity_and_beyond")
-
-echo "Terminated"
+kill "$(pgrep -f 4-to_infinity_and_beyond)"
