@@ -24,24 +24,23 @@ int infinite_while(void)
  */
 int main(void)
 {
-    pid_t zombie_pid;
-    int i;
+	pid_t pid;
+	char count = 0;
 
-    for (i = 0; i < 5; i++)
-    {
-        zombie_pid = fork(); // Create child process
+	while (count < 5)
+	{
+		pid = fork();
+		if (pid > 0)
+		{
+			printf("Zombie process created, PID: %d\n", pid);
+			sleep(1);
+			count++;
+		}
+		else
+			exit(0);
+	}
 
-        if (zombie_pid > 0)
-        {
-            printf("Zombie process created, PID: %d\n", zombie_pid);
-        }
-        else
-        {
-            exit(0); // Child exits immediately, becoming a zombie
-        }
-    }
+	infinite_while();
 
-    infinite_while(); // Keep the program running
-
-    return (0);
+	return (EXIT_SUCCESS);
 }
