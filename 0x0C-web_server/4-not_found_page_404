@@ -6,21 +6,22 @@ echo "Hello World!" > index.html
 sudo mv index.html /var/www/html
 
 
-echo "Ceci n'est pas une page" > 404.html
-sudo mv 404.html /var/www/html
-echo "server {
-   listen 80 default_server;
-   listen [::]:80 default_server;
-   
-   root /var/www/html;
-   index index.html;
-   location /redirect_me {
-      return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-   }
-   error_page 404 /404.html;
-   location = /404.html{
-      internal;
-   }
-}" > default
+echo "Ceci n'est pas une page" > /usr/share/nginx/html/custom_404.html
+
+# Create a new Nginx configuration file for the custom 404 page
+cat > /etc/nginx/sites-available/custom_404 <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    server_name _;
+
+    error_page 404 /custom_404.html;
+    location = /custom_404.html {
+        root /usr/share/nginx/html;
+        internal;
+    }
+}
+EOF
 sudo mv -f default /etc/nginx/sites-available/default
 sudo service nginx restart
