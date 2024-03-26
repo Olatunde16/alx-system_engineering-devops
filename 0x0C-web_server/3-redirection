@@ -7,22 +7,19 @@ mkdir -p /var/www/html/
 sudo chmod -R 755 /var/www
 echo 'Hello World!' > /var/www/html/index.html
 SERVER_CONFIG=\
-cat > /etc/nginx/sites-available/redirect_me <<EOF
-server {
+"server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 	root /var/www/html;
 	index index.html index.htm index.nginx-debian.html;
 	server_name _;
-
-	location /redirect_me {
-		return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-	}
 	location / {
-		return 200 "Welcome to Nginx!";
+		try_files \$uri \$uri/ =404;
 	}
-}
-EOF
+	if (\$request_filename ~ redirect_me){
+		rewrite ^ https://sketchfab.com/bluepeno/models permanent;
+	}
+}"
 
 bash -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-enabled/default"
 
