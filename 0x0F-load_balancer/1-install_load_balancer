@@ -5,45 +5,43 @@ sudo apt-get install -y software-properties-common
 sudo apt install -y haproxy
 
 echo "ENABLED=1" > /etc/default/haproxy
-mv /etc/haproxy/haproxy.cfg[,.original]
+mv /etc/haproxy/haproxy.cfg{,.original}
 touch /etc/haproxy/haproxy.cfg
 
-print %s "global   
-   log 127.0.0.1 local0 notice
-   maxconn 2000
-   user haproxy
-   group haproxy
+echo "global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
 
 defaults
-   log global
-   mode http
-   option httplog
-   option dontlognull
-   retries 3
-   option redispatch
-   timeout connect 5000
-   timeout client 30000
-   timeout server 30000
-   errorfile 400 /etc/haproxy/errors/400.htp
-   errorfile 403 /etc/haproxy/errors/403.htp
-   errorfile 408 /etc/haproxy/errors/408.htp
-   errorfile 500 /etc/haproxy/errors/500.htp
-   errorfile 502 /etc/haproxy/errors/502.htp
-   errorfile 503 /etc/haproxy/errors/503.htp
-   errorfile 504 /etc/haproxy/errors/504.htp
+    log global
+    mode http
+    option httplog
+    option dontlognull
+    retries 3
+    option redispatch
+    timeout connect 5000
+    timeout client 30000
+    timeout server 30000
+    errorfile 400 /etc/haproxy/errors/400.htp
+    errorfile 403 /etc/haproxy/errors/403.htp
+    errorfile 408 /etc/haproxy/errors/408.htp
+    errorfile 500 /etc/haproxy/errors/500.htp
+    errorfile 502 /etc/haproxy/errors/502.htp
+    errorfile 503 /etc/haproxy/errors/503.htp
+    errorfile 504 /etc/haproxy/errors/504.htp
 
 frontend http-in
-   timeout client 30000
-   bind 0:80
-   default_backend servers
+    timeout client 30000
+    bind 0:80
+    default_backend servers
 
 backend servers
-   timeout connect 3000
-   timeout server 30000
-   balance roundrobin
-   server 356893-web-01 100.25.17.119:80 check
-   server 356893-web-02 54.88.101.99:80 check
-
-" >> /etc/haproxy/haproxy.cfg
+    timeout connect 3000
+    timeout server 30000
+    balance roundrobin
+    server 356893-web-01 100.25.17.119:80 check
+    server 356893-web-02 54.88.101.99:80 check" >> /etc/haproxy/haproxy.cfg
 
 sudo service haproxy restart
