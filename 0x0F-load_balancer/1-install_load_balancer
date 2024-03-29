@@ -4,7 +4,7 @@
 apt-get install -y software-properties-common
 add-apt-repository -y ppa:vbernat/haproxy-1.8
 apt-get -y update
-apt-get install -y haproxy=1.8.\*
+apt-get install -y haproxy=1.8
 
 echo "ENABLED=1" > /etc/default/haproxy
 
@@ -16,8 +16,8 @@ echo "
    balance roundrobin
    option httpclose
    option forwardfor
-    server 356893-web-01 100.25.17.119:80 check
-    server 356893-web-02 54.88.101.99:80 check
+   server 356893-web-01 100.25.17.119:80 check
+   server 356893-web-02 54.88.101.99:80 check
 " >> /etc/haproxy/haproxy.cfg
 
 service haproxy start
