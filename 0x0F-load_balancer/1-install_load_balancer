@@ -1,51 +1,59 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# install load balancer
 
-# Update package lists
-sudo apt update
 
-# Install HAProxy
-sudo apt install -y haproxy
+echo -e "Updating and doing some minor checks...\n"
 
-# Configure HAProxy
-cat <<EOF | sudo tee /etc/haproxy/haproxy.cfg > /dev/null
-global
-    log /dev/log    local0
-    log /dev/log    local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
-    stats timeout 30s
-    user haproxy
-    group haproxy
-    daemon
+function install() {
+	command -v "$1" &> /dev/null
 
+	#shellcheck disable=SC2181
+	if [ $? -ne 0 ]; then
+		echo -e "	Installing: $1\n"
+		sudo apt-get update -y -qq && \
+			sudo apt-get install -y "$1" -qq
+		echo -e "\n"
+	else
+		echo -e "	${1} is already installed.\n"
+	fi
+}
+
+install haproxy #install haproxy
+
+echo -e "\nSetting up some minor stuff.\n"
+
+# backup default server config file
+sudo cp /etc/haproxy/haproxy.cfg haproxy_default.backup
+
+server_config=\
+"
 defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
-    errorfile 400 /etc/haproxy/errors/400.http
-    errorfile 403 /etc/haproxy/errors/403.http
-    errorfile 408 /etc/haproxy/errors/408.http
-    errorfile 500 /etc/haproxy/errors/500.http
-    errorfile 502 /etc/haproxy/errors/502.http
-    errorfile 503 /etc/haproxy/errors/503.http
-    errorfile 504 /etc/haproxy/errors/504.http
+  mode http
+  timeout client 15s
+  timeout connect 10s
+  timeout server 15s
+  timeout http-request 10s
 
-frontend http_front
+frontend globalprogressions.tech_frontend
     bind *:80
-    default_backend http_back
+    default_backend globalprogressions.tech_backend
 
-backend http_back
+backend globalprogressions.tech_backend
     balance roundrobin
     server 356893-web-01 100.25.17.119:80 check
     server 356893-web-02 54.88.101.99:80 check
-EOF
+"
 
-# Enable HAProxy service
-sudo systemctl enable haproxy
+# shellcheck disable=SC2154
+echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
 
-# Restart HAProxy service
-sudo systemctl restart haproxy
+# enable haproxy to be started by init script
+echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
+
+echo "configured - Roundrobin On web-01 & web-02"
+
+if [ "$(pgrep -c haproxy)" -le 0 ]; then
+	sudo service haproxy start
+else
+	sudo service haproxy restart
+fi
