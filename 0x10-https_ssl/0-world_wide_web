@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Usage: ./1-world_wide_web <domain> <subdomain>
+# Display information about subdomains.
+
+display_subdomain_info () {
+	local subdomain="$1"
+	local domain="$2"
+
+	dig_output=$(dig "$subdomain.$domain" | awk '/^;; ANSWER SECTION:$/,/^$/' | grep -v ';')
+
+	if [[ -n "$dig_output" ]]; then
+		record_type=$(echo "$dig_output" | awk '{print $4}')
+		destination=$(echo "$dig_output" | awk '{print $5}')
+		echo "The subdomain $subdomain is a $record_type record and points to $destination"
+	else
+		echo "No information found for subdomain $subdomain"	
+	fi
+}
+
+if [ "$#" == 1 ]; then
+	display_subdomain_info "$subdomain" "www"
+	display_subdomain_info "$subdomain" "lb-01"
+	display_subdomain_info "$subdomain" "web-01"
+	display_subdomain_info "$subdomain" "web-02"
+elif [ "$#" == 2 ]; then
+	display_subdomain_info "$subdomain" "$domain"
+fi
