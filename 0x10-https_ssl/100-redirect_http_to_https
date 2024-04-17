@@ -33,7 +33,7 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-frontend clickviral-frontend
+frontend globalprogressions-frontend
         bind *:80
         mode http
         http-request redirect scheme https code 301 unless { ssl_fc }
