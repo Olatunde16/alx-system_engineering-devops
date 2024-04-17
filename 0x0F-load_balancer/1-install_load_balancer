@@ -40,8 +40,8 @@ frontend globalprogressions.tech_frontend
 
 backend globalprogressions.tech_backend
     balance roundrobin
-    server 356893-web-01 100.25.17.119:80 check
-    server 356893-web-02 54.88.101.99:80 check
+    server 356893-web-01 54.161.251.100:80 check
+    server 356893-web-02 100.25.143.163:80 check
 "
 
 # shellcheck disable=SC2154
