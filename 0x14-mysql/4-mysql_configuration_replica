@@ -1,0 +1,21 @@
+# /etc/mysql/mysql.conf.d/mysqld.cnf
+
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+# Uncomment the following line to bind MySQL to all IP addresses
+# bind-address=0.0.0.0
+
+# Define server ID for replication
+server-id=2
+
+# Enable binary logging
+log-bin=/var/log/mysql/mysql-bin.log
+
+# Replicate the specified database
+binlog_do_db=tyrell_corp
+
+# Enable GTID-based replication
+enforce-gtid-consistency=true
+log-slave-updates=true
